@@ -1,0 +1,4 @@
+interface:
+  display_name: "Facebook Reels Extractor"
+  short_description: "Extract public Facebook Reel metrics through Chrome Relay"
+  default_prompt: "Extract the Reels from this Facebook profile:"
