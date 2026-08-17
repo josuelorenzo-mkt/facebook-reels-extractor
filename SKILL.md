@@ -16,9 +16,11 @@ Use a two-stage, ID-correlated collection. The profile grid is authoritative for
 ## Stage 1: discover the grid
 
 1. Navigate to `<profile-url>/reels_tab`.
-2. Follow the Stage 1 capture contract in `{baseDir}/references/browser-evaluators.md`.
-3. Stop after three consecutive scrolls add no IDs.
-4. Preserve `views_display` exactly. Never turn `2.5K` into an exact view count.
+2. Wait 5,000 ms after the initial navigation before evaluating the first grid.
+3. Follow the Stage 1 capture contract in `{baseDir}/references/browser-evaluators.md`, using `{baseDir}/scripts/facebook-stage-one.mjs` for every scroll.
+4. After each scroll, wait the full 5,000 ms before reading cards. Do not scroll again, switch accounts, or mark the profile complete during that wait.
+5. Stop only after three consecutive scrolls, each followed by the full wait, add no IDs. Loading placeholders are not evidence that the inventory is complete.
+6. Preserve `views_display` exactly. Never turn `2.5K` into an exact view count.
 
 ## Stage 2: enrich every ID
 
