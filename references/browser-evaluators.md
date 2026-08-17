@@ -4,7 +4,21 @@ Collect two arrays in the active Facebook tab and save them in one raw-run JSON 
 
 ## Stage 1: profile grid
 
-Navigate to `<profile-url>/reels_tab`. Scroll, wait for rendering, then evaluate:
+Navigate to `<profile-url>/reels_tab`, then wait 5,000 ms before the first evaluation. Facebook renders Reel cards more slowly than the other supported platforms.
+
+For every subsequent scroll, use the mandatory timing wrapper below. It must complete the scroll, wait 5,000 ms, and only then evaluate the grid. Do not replace the wait with a shorter delay or issue another scroll while it is pending:
+
+```js
+import { scrollAndCaptureFacebookGrid } from '{baseDir}/scripts/facebook-stage-one.mjs';
+
+const rows = await scrollAndCaptureFacebookGrid({
+  scroll: () => tab.dom_cua.scroll({ x: 700, y: 900 }),
+  wait: (milliseconds) => tab.playwright.waitForTimeout(milliseconds),
+  capture: () => tab.playwright.evaluate(gridEvaluator),
+});
+```
+
+Use the following `gridEvaluator` for `capture`:
 
 ```js
 () => {
@@ -19,7 +33,7 @@ Navigate to `<profile-url>/reels_tab`. Scroll, wait for rendering, then evaluate
 }
 ```
 
-Merge returned rows by `video_id`; stop after three consecutive scrolls add no IDs.
+Merge returned rows by `video_id`; stop after three consecutive *post-wait* scrolls add no IDs. If Facebook still shows loading placeholders, complete the current 5,000 ms wait and capture again before deciding that no new IDs were added. Never switch to the next account before this stop condition is satisfied.
 
 ## Stage 2: universal Reel page
 
